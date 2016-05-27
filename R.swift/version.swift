@@ -8,4 +8,4 @@
 
 import Foundation
 
-let version = "2.3.0"
+let version = "2.3.1.alpha.1"
