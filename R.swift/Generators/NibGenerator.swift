@@ -95,7 +95,7 @@ struct NibGenerator: Generator {
   }
 
   private static func nibVarForNib(nib: Nib) -> Let {
-    let nibStructName = sanitizedSwiftName("_\(nib.name)")
+    let nibStructName = sanitizedSwiftName("_\(nib.name)", allowUnderscore: true)
     let structType = Type(module: .Host, name: "_R.nib.\(nibStructName)")
     return Let(
       comments: ["Nib `\(nib.name)`."],

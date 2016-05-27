@@ -12,9 +12,14 @@ import Foundation
 Disallowed characters: whitespace, mathematical symbols, arrows, private-use and invalid Unicode points, line- and boxdrawing characters
 Special rules: Can't begin with a number
 */
-func sanitizedSwiftName(name: String, lowercaseFirstCharacter: Bool = true) -> String {
-  var nameComponents = name.componentsSeparatedByCharactersInSet(BlacklistedCharacters)
+func sanitizedSwiftName(name: String, lowercaseFirstCharacter: Bool = true, allowUnderscore: Bool = false, blacklist: NSCharacterSet = BlacklistedCharacters) -> String {
+  let blacklisted = NSMutableCharacterSet()
+  blacklisted.formUnionWithCharacterSet(blacklist)
+  if allowUnderscore {
+    blacklisted.removeCharactersInString("_")
+  }
 
+  var nameComponents = name.componentsSeparatedByCharactersInSet(blacklisted)
   let firstComponent = nameComponents.removeAtIndex(0)
   let cleanedSwiftName = nameComponents.reduce(firstComponent) { $0 + $1.uppercaseFirstCharacter }
 
@@ -28,6 +33,10 @@ func sanitizedSwiftName(name: String, lowercaseFirstCharacter: Bool = true) -> S
   }
 
   return capitalizedSwiftName // .isEmpty ? nil : capitalizedSwiftName
+}
+
+func sanitizedSwiftParameterName(name: String, lowercaseFirstCharacter: Bool = true) -> String {
+  return sanitizedSwiftName(name, lowercaseFirstCharacter: lowercaseFirstCharacter, allowUnderscore: true)
 }
 
 struct SwiftNameGroups<T> {
@@ -58,7 +67,6 @@ private let BlacklistedCharacters: NSCharacterSet = {
   blacklist.formUnionWithCharacterSet(NSCharacterSet.symbolCharacterSet())
   blacklist.formUnionWithCharacterSet(NSCharacterSet.illegalCharacterSet())
   blacklist.formUnionWithCharacterSet(NSCharacterSet.controlCharacterSet())
-  blacklist.removeCharactersInString("_")
 
   // Emoji ranges, roughly based on http://www.unicode.org/Public/emoji/1.0//emoji-data.txt
   [

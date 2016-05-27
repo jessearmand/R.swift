@@ -74,7 +74,7 @@ struct Function: UsedTypesProvider {
     }
 
     var swiftName: String {
-      return sanitizedSwiftName(name, lowercaseFirstCharacter: true)
+      return sanitizedSwiftParameterName(name, lowercaseFirstCharacter: true)
     }
 
     var description: String {
